@@ -6,11 +6,17 @@ import {
   saveTask
 } from "../store/taskStore";
 import { Button, Checkbox, Stack, TextField, Typography } from "@mui/material";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 const ListTodos = ({ todos }) => {
   const dispatch = useDispatch();
   const [editText, setEditText] = useState("");
+  const editEnabledIdRef = useRef(null);
+
+  function handleSave(item) {
+    dispatch(saveTask({ id: item.id, title: editText }));
+    dispatch(isEditable({ id: item.id, isEditable: false }));
+  }
 
   return (
     <>
@@ -27,6 +33,11 @@ const ListTodos = ({ todos }) => {
             />
             {item.editable ? (
               <TextField
+                onKeyUp={(e) => {
+                  if (e.key === "Enter") {
+                    handleSave(item);
+                  }
+                }}
                 value={editText}
                 onChange={(e) => {
                   setEditText(e.target.value);
@@ -46,11 +57,21 @@ const ListTodos = ({ todos }) => {
                 variant="subtitle2"
                 style={{
                   flex: 1,
-                  alignSelf: "center"
+                  alignSelf: "center",
+                  fontSize: 16,
+                  paddingLeft: 12
                 }}
                 onDoubleClick={() => {
-                  // setEnableEdit(!enableEdit);
+                  if (editEnabledIdRef.current) {
+                    dispatch(
+                      isEditable({
+                        id: editEnabledIdRef.current,
+                        editable: false
+                      })
+                    );
+                  }
                   dispatch(isEditable({ id: item.id, editable: true }));
+                  editEnabledIdRef.current = item.id;
                   setEditText(item.title);
                 }}
               >
@@ -62,8 +83,7 @@ const ListTodos = ({ todos }) => {
                 variant="outlined"
                 size="small"
                 onClick={() => {
-                  dispatch(saveTask({ id: item.id, title: editText }));
-                  dispatch(isEditable({ id: item.id, isEditable: false }));
+                  handleSave(item);
                 }}
               >
                 Save
