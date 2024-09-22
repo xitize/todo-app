@@ -1,5 +1,10 @@
 # Todo App
 
+## Stack used
+
+- React.js
+- MUI
+
 ## Features
 
 1. Add todo.
