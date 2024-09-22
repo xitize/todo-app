@@ -1,7 +1,7 @@
 import "./App.css";
 import ButtonAddTodo from "./component/ButtonAddTodo";
 import InputTodo from "./component/InputTodo";
-import ListTodos from "./component/ListTodos";
+import ListTodo from "./component/ListTodo";
 import { useDispatch, useSelector } from "react-redux";
 import { addTask } from "./store/taskStore";
 import { useState } from "react";
@@ -40,7 +40,7 @@ function App() {
           }}
         />
       </Stack>
-      <ListTodos
+      <ListTodo
         todos={todos.slice().reverse()}
         setInputText={setInputText}
         inputText={inputText}
